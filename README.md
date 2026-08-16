@@ -17,3 +17,7 @@ Upload the contents of this folder to the repository root. Then enable GitHub Pa
 
 ## Important
 GitHub Pages is static hosting. This version stores data in the browser's localStorage. For multi-device/shared cloud data, authentication, and server-side database synchronization, a backend/API is required.
+
+
+### Receipt PNG
+Mobile Banking and Mobile Recharge-এর রসিদে Print ও PNG অপশন আছে। PNG বাটন শুধু রসিদ কার্ডটিই PNG হিসেবে সেভ করে; পুরো ওয়েবপেজ সেভ হয় না।

@@ -59,3 +59,32 @@
   body.receipt-printing .service-receipt-toolbar{display:none!important}
   body.receipt-printing .service-receipt{width:80mm;max-width:80mm;margin:0 auto!important;border:0;box-shadow:none;border-radius:0;padding:4mm;background:#fff}
 }
+
+
+/* Requested receipt controls: Print + PNG for Mobile Banking / Mobile Recharge */
+.service-receipt-toolbar{
+  width:100%;
+  max-width:380px;
+  margin:0 auto 10px;
+  padding:0;
+}
+.service-receipt-toolbar>strong{
+  font-size:14px;
+  font-weight:800;
+}
+.receipt-toolbar-actions{
+  display:flex;
+  gap:6px;
+}
+.receipt-toolbar-actions .outline-btn,
+.receipt-toolbar-actions .primary-btn{
+  min-width:58px;
+  padding:7px 10px;
+  font-size:11px;
+  border-radius:8px;
+}
+.service-receipt{
+  max-width:360px;
+  border-radius:10px;
+  padding:16px 16px 12px;
+}
