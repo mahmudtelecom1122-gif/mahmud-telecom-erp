@@ -150,7 +150,10 @@ async function makeServiceReceiptPngData(title,x,type){
   const H=760;
   const logoSvg=logo?`<image href="${logo}" x="${pad+2}" y="48" width="78" height="78" preserveAspectRatio="xMidYMid slice"/>`:
     `<rect x="${pad+2}" y="48" width="78" height="78" rx="14" fill="#ff315f"/><text x="${pad+41}" y="98" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">MT</text>`;
-  let y=190;
+  // Start the detail rows below the transaction meta and transaction-type title.
+  // The old y=190 overlapped the date/time area, making the customer's mobile number
+  // appear on the same line as the date. Keep a clear vertical gap before the rows.
+  let y=292;
   const rowSvg=rows.map(([a,b])=>{
     const out=`<text x="${pad}" y="${y}" font-size="20" fill="#626a84">${svgEsc(a)}</text>
       <text x="${W-pad}" y="${y}" text-anchor="end" font-size="20" font-weight="700" fill="#20284b">${svgEsc(b)}</text>
