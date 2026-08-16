@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17245f">
+<meta name="description" content="Mahmud Telecom Professional ERP — বিক্রয়, ক্রয়, স্টক, কাস্টমার, সাপ্লায়ার, বাকি, রিচার্জ, মোবাইল ব্যাংকিং ও রিপোর্ট।">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="css/style.css">
+<title>Mahmud Telecom Professional ERP</title>
+</head>
+<body>
+<div id="toast" class="toast" role="status"></div>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><img src="assets/logo.png" alt="Mahmud Telecom"><div><b>মাহমুদ টেলিকম</b><small>Professional ERP</small></div></div>
+    <div class="shop-status"><span></span><div><b>সিস্টেম চালু</b><small id="clockText">--:--</small></div></div>
+    <nav id="sideNav" class="nav-list">
+      <button data-page="dashboard" class="active"><i>▦</i>হোম</button>
+      <button data-page="sales"><i>▣</i>বিক্রয়</button>
+      <button data-page="purchases"><i>▤</i>ক্রয়</button>
+      <button data-page="products"><i>◇</i>স্টক / পণ্য</button>
+      <button data-page="customers"><i>♙</i>কাস্টমার</button>
+      <button data-page="suppliers"><i>♧</i>সাপ্লায়ার</button>
+      <button data-page="dues"><i>৳</i>বাকি</button>
+      <button data-page="recharge"><i>⌁</i>রিচার্জ</button>
+      <button data-page="banking"><i>৳</i>মোবাইল ব্যাংকিং</button>
+      <button data-page="reports"><i>▥</i>রিপোর্ট</button>
+      <button data-page="settings"><i>⚙</i>সেটিংস</button>
+    </nav>
+    <div class="side-footer">GitHub Pages Ready<br><small>Local-first • Responsive</small></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn mobile-only" id="menuBtn">☰</button>
+      <div class="page-heading"><span>মাহমুদ টেলিকম</span><h1 id="pageTitle">ড্যাশবোর্ড</h1></div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" title="থিম">☼</button>
+        <button class="lang-btn" id="langBtn">EN</button>
+        <button class="user-chip" id="profileBtn"><span>MN</span><b>মোঃ নুরুল্লাহ</b></button>
+      </div>
+    </header>
+
+    <section class="content">
+      <!-- DASHBOARD -->
+      <section class="page active" id="page-dashboard">
+        <div class="dashboard-header"><div><div class="eyebrow">Overview</div><h2>আজকের ব্যবসার সারাংশ</h2></div><div class="date-pill" id="todayDate">--</div></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon blue">৳</div><div><small>আজকের বিক্রয়</small><strong id="todaySales">৳ ০</strong></div><em>আজ</em></article>
+          <article class="stat-card"><div class="stat-icon green">↗</div><div><small>মাসের বিক্রয়</small><strong id="monthSales">৳ ০</strong></div><em>এই মাস</em></article>
+          <article class="stat-card"><div class="stat-icon red">!</div><div><small>মোট বাকি</small><strong id="totalDue">৳ ০</strong></div><em>গ্রাহক</em></article>
+          <article class="stat-card"><div class="stat-icon orange">⌁</div><div><small>মাসের লাভ</small><strong id="monthProfit">৳ ০</strong></div><em>আনুমানিক</em></article>
+        </div>
+        <div class="collection-card">
+          <div class="collection-head"><div><span class="money-badge">৳</span><b>আজকের মোট কালেকশন</b></div><button class="outline-btn" data-page="dues">বাকি আদায়</button></div>
+          <div class="collection-total" id="todayCollection">৳ ০</div><p id="collectionText">আজ কোনো কালেকশন যোগ করা হয়নি</p>
+          <div class="mini-grid"><div><span>▣</span><small>নগদ/বিক্রয়</small><b id="todayCash">৳ ০</b></div><div><span>৳</span><small>বাকি পরিশোধ</small><b id="todayDuePaid">৳ ০</b></div></div>
+          <hr>
+          <div class="month-collection"><div><small>এই মাসের মোট কালেকশন</small><b id="monthCollection">৳ ০</b></div><span id="monthTx">০টি লেনদেন</span></div>
+          <div class="payment-chips"><span>নগদ <b id="cashMonth">৳ ০</b></span><span>বাকি আদায় <b id="dueMonth">৳ ০</b></span></div>
+        </div>
+        <div class="quick-title"><div><div class="eyebrow">Quick Access</div><h2>দ্রুত কাজ</h2></div></div>
+        <div class="quick-grid">
+          <button data-page="sales"><span>▣</span><b>নতুন বিক্রয়</b><small>বিল তৈরি করুন</small></button>
+          <button data-page="purchases"><span>▤</span><b>নতুন ক্রয়</b><small>স্টক বাড়ান</small></button>
+          <button data-page="recharge"><span>⌁</span><b>রিচার্জ</b><small>মোবাইল রিচার্জ</small></button>
+          <button data-page="banking"><span>৳</span><b>মোবাইল ব্যাংকিং</b><small>Cash In / Out</small></button>
+          <button data-page="customers"><span>♙</span><b>কাস্টমার</b><small>নতুন গ্রাহক</small></button>
+          <button data-page="reports"><span>▥</span><b>রিপোর্ট</b><small>হিসাব দেখুন</small></button>
+        </div>
+        <div class="two-col"><div class="panel"><div class="panel-head"><div><b>সাম্প্রতিক বিক্রয়</b><small>সর্বশেষ ৫টি</small></div><button class="text-btn" data-page="sales">সব দেখুন →</button></div><div id="recentSales"></div></div><div class="panel"><div class="panel-head"><div><b>বাকি গ্রাহক</b><small>সর্বোচ্চ বকেয়া</small></div><button class="text-btn" data-page="dues">সব দেখুন →</button></div><div id="topDues"></div></div></div>
+      </section>
+
+      <!-- SALES -->
+      <section class="page" id="page-sales"><div class="section-title"><div><div class="eyebrow">Transactions</div><h2>বিক্রয় ব্যবস্থাপনা</h2><p>বিক্রয়, বাকি ও পেমেন্ট এক জায়গা থেকে পরিচালনা করুন।</p></div><button class="primary-btn" id="newSaleBtn">＋ নতুন বিক্রয়</button></div><div class="toolbar"><input id="saleSearch" placeholder="বিল, কাস্টমার বা ফোন খুঁজুন..."><select id="saleFilter"><option value="all">সব পেমেন্ট</option><option value="cash">নগদ</option><option value="due">বাকি</option><option value="partial">আংশিক</option></select></div><div class="table-card"><div class="table-wrap"><table><thead><tr><th>বিল</th><th>তারিখ</th><th>কাস্টমার</th><th>মোট</th><th>পরিশোধ</th><th>বাকি</th><th>অবস্থা</th><th></th></tr></thead><tbody id="salesTable"></tbody></table></div></div></section>
+
+      <!-- PURCHASES -->
+      <section class="page" id="page-purchases"><div class="section-title"><div><div class="eyebrow">Inventory In</div><h2>ক্রয় ব্যবস্থাপনা</h2><p>সাপ্লায়ার, ক্রয় মূল্য এবং স্টক আপডেট।</p></div><button class="primary-btn" id="newPurchaseBtn">＋ নতুন ক্রয়</button></div><div class="toolbar"><input id="purchaseSearch" placeholder="চালান বা সাপ্লায়ার খুঁজুন..."><select id="purchaseFilter"><option value="all">সব</option><option value="paid">পরিশোধিত</option><option value="due">বাকি</option></select></div><div class="table-card"><div class="table-wrap"><table><thead><tr><th>চালান</th><th>তারিখ</th><th>সাপ্লায়ার</th><th>পণ্য</th><th>মোট</th><th>পরিশোধ</th><th>বাকি</th><th></th></tr></thead><tbody id="purchaseTable"></tbody></table></div></div></section>
+
+      <!-- PRODUCTS -->
+      <section class="page" id="page-products"><div class="section-title"><div><div class="eyebrow">Inventory</div><h2>পণ্য ও স্টক</h2><p>স্টক, ক্রয় মূল্য, বিক্রয় মূল্য এবং কম স্টকের সতর্কতা।</p></div><button class="primary-btn" id="newProductBtn">＋ নতুন পণ্য</button></div><div class="inventory-cards"><div><small>মোট পণ্য</small><b id="productCount">০</b></div><div><small>স্টক ইউনিট</small><b id="stockUnits">০</b></div><div><small>স্টক মূল্য</small><b id="stockValue">৳ ০</b></div><div class="danger"><small>কম স্টক</small><b id="lowStockCount">০</b></div></div><div class="toolbar"><input id="productSearch" placeholder="পণ্যের নাম/কোড খুঁজুন..."><select id="productCat"><option value="all">সব ক্যাটাগরি</option></select></div><div class="product-grid" id="productGrid"></div></section>
+
+      <!-- CUSTOMERS -->
+      <section class="page" id="page-customers"><div class="section-title"><div><div class="eyebrow">CRM</div><h2>কাস্টমার</h2><p>গ্রাহকের যোগাযোগ, বিক্রয় ও বাকি হিসাব।</p></div><button class="primary-btn" id="newCustomerBtn">＋ নতুন কাস্টমার</button></div><div class="toolbar"><input id="customerSearch" placeholder="নাম বা ফোন খুঁজুন..."></div><div class="customer-grid" id="customerGrid"></div></section>
+
+      <!-- SUPPLIERS -->
+      <section class="page" id="page-suppliers"><div class="section-title"><div><div class="eyebrow">Vendors</div><h2>সাপ্লায়ার</h2><p>সরবরাহকারী ও পাওনা হিসাব।</p></div><button class="primary-btn" id="newSupplierBtn">＋ নতুন সাপ্লায়ার</button></div><div class="customer-grid" id="supplierGrid"></div></section>
+
+      <!-- DUES -->
+      <section class="page" id="page-dues"><div class="section-title"><div><div class="eyebrow">Receivable</div><h2>বাকি ও কালেকশন</h2><p>কে কত টাকা বাকি রেখেছে এবং কত পরিশোধ করেছে দেখুন।</p></div><button class="primary-btn" id="collectDueBtn">＋ বাকি আদায়</button></div><div class="due-summary"><div><small>মোট বাকি</small><b id="dueTotalPage">৳ ০</b></div><div><small>এই মাসে আদায়</small><b id="dueCollectedPage">৳ ০</b></div><div><small>বাকি কাস্টমার</small><b id="dueCustomerCount">০</b></div></div><div class="table-card"><div class="table-wrap"><table><thead><tr><th>কাস্টমার</th><th>ফোন</th><th>মোট বিক্রয়</th><th>পরিশোধ</th><th>বাকি</th><th>সর্বশেষ</th><th></th></tr></thead><tbody id="dueTable"></tbody></table></div></div></section>
+
+      <!-- RECHARGE -->
+      <section class="page" id="page-recharge"><div class="section-title"><div><div class="eyebrow">Mobile Recharge</div><h2>মোবাইল রিচার্জ</h2><p>রিচার্জ লেনদেনের হিসাব রাখুন।</p></div><button class="primary-btn" id="newRechargeBtn">＋ রিচার্জ</button></div><div class="recharge-hero"><div><span>আজকের রিচার্জ</span><b id="rechargeToday">৳ ০</b></div><div><span>এই মাস</span><b id="rechargeMonth">৳ ০</b></div><div><span>লেনদেন</span><b id="rechargeCount">০</b></div></div><div class="table-card"><div class="table-wrap"><table><thead><tr><th>সময়</th><th>নম্বর</th><th>অপারেটর</th><th>ধরন</th><th>টাকা</th><th>মাধ্যম</th><th></th></tr></thead><tbody id="rechargeTable"></tbody></table></div></div></section>
+
+      <!-- BANKING -->
+      <section class="page" id="page-banking"><div class="section-title"><div><div class="eyebrow">Mobile Financial Service</div><h2>মোবাইল ব্যাংকিং</h2><p>বিকাশ, নগদ, রকেটসহ MFS-এর Cash In / Cash Out হিসাব।</p></div><button class="primary-btn" id="newBankBtn">＋ নতুন লেনদেন</button></div><div class="wallet-grid" id="walletGrid"></div><div class="table-card"><div class="table-wrap"><table><thead><tr><th>সময়</th><th>মাধ্যম</th><th>ধরন</th><th>নম্বর</th><th>টাকা</th><th>চার্জ</th><th></th></tr></thead><tbody id="bankTable"></tbody></table></div></div></section>
+
+      <!-- REPORTS -->
+      <section class="page" id="page-reports"><div class="section-title"><div><div class="eyebrow">Analytics</div><h2>রিপোর্ট ও হিসাব</h2><p>তারিখ অনুযায়ী ব্যবসার সারাংশ, লাভ ও লেনদেন।</p></div><div class="report-actions"><button class="outline-btn" id="printReportBtn">🖨️ প্রিন্ট</button><button class="primary-btn" id="pngReportBtn">🖼️ PNG</button></div></div><div class="report-filter"><label>শুরু <input type="date" id="reportFrom"></label><label>শেষ <input type="date" id="reportTo"></label><button class="primary-btn" id="applyReport">রিপোর্ট দেখুন</button></div><div id="reportArea" class="report-area"><div class="report-head"><img src="assets/logo.png"><div><h2>মাহমুদ টেলিকম</h2><p>ব্যবসায়িক রিপোর্ট</p></div><span id="reportDateText"></span></div><div class="report-kpis" id="reportKpis"></div><div class="report-chart"><div class="chart-title">বিক্রয় ও কালেকশন</div><div id="barChart" class="bars"></div></div><div class="panel"><div class="panel-head"><b>রিপোর্ট সারাংশ</b><small>নির্বাচিত সময়</small></div><div id="reportSummary"></div></div></div></section>
+
+      <!-- SETTINGS -->
+      <section class="page" id="page-settings"><div class="section-title"><div><div class="eyebrow">System</div><h2>সেটিংস</h2><p>দোকানের তথ্য, থিম, ডাটা ব্যাকআপ ও সিস্টেম কন্ট্রোল।</p></div></div><div class="settings-grid"><div class="settings-card"><h3>দোকানের তথ্য</h3><label>দোকানের নাম<input id="shopName" value="মাহমুদ টেলিকম"></label><label>মালিকের নাম<input id="ownerName" value="মোঃ নুরুল্লাহ"></label><label>মোবাইল নম্বর<input id="shopPhone" value="01846655270"></label><label>ঠিকানা<textarea id="shopAddress">বাংলাদেশ</textarea></label><button class="primary-btn" id="saveShop">সংরক্ষণ করুন</button></div><div class="settings-card"><h3>চেহারা ও ভাষা</h3><div class="setting-row"><div><b>ডার্ক মোড</b><small>চোখের আরামের জন্য</small></div><input type="checkbox" id="darkToggle"></div><div class="setting-row"><div><b>ভাষা</b><small id="settingLang">বাংলা</small></div><button class="outline-btn" id="settingLangBtn">English</button></div><div class="setting-row"><div><b>সিস্টেম স্ট্যাটাস</b><small>লোকাল ডাটা সংরক্ষিত</small></div><span class="online-badge">● Online</span></div></div><div class="settings-card"><h3>ডাটা ব্যাকআপ</h3><p class="muted">আপনার হিসাব এই ব্রাউজারে সংরক্ষিত থাকে। নিয়মিত JSON ব্যাকআপ রাখুন।</p><div class="setting-actions"><button class="outline-btn" id="exportBtn">⬇ JSON Backup</button><label class="file-btn">⬆ Import JSON<input type="file" id="importInput" accept="application/json"></label></div><button class="danger-btn" id="resetData">সব ডাটা রিসেট</button></div><div class="settings-card"><h3>প্রিন্ট ও রসিদ</h3><p class="muted">বিক্রয় রসিদ A4/80mm প্রিন্টের জন্য প্রস্তুত। রিপোর্ট PNG হিসেবে সংরক্ষণ করা যাবে।</p><button class="outline-btn" id="receiptTest">রসিদ প্রিভিউ</button></div></div></section>
+    </section>
+  </main>
+</div>
+
+<nav class="bottom-nav" id="bottomNav"><button data-page="dashboard" class="active"><i>▦</i><small>হোম</small></button><button data-page="products"><i>◇</i><small>স্টক</small></button><button data-page="sales"><i>▣</i><small>বিক্রয়</small></button><button data-page="dues"><i>৳</i><small>বাকি</small></button><button data-page="reports"><i>▥</i><small>রিপোর্ট</small></button><button data-page="settings"><i>⚙</i><small>সেটিংস</small></button></nav>
+
+<!-- MODAL -->
+<div class="modal" id="modal"><div class="modal-backdrop" data-close></div><div class="modal-box"><button class="modal-close" data-close>×</button><div id="modalContent"></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="js/app.js"></script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
+</body></html>
