@@ -20,4 +20,4 @@ GitHub Pages is static hosting. This version stores data in the browser's localS
 
 
 ### Receipt PNG
-Mobile Banking and Mobile Recharge-এর রসিদে Print ও PNG অপশন আছে। PNG বাটন শুধু রসিদ কার্ডটিই PNG হিসেবে সেভ করে; পুরো ওয়েবপেজ সেভ হয় না।
+Mobile Banking and Mobile Recharge-এর রসিদে Print ও PNG অপশন আছে। PNG বাটন শুধু রসিদ কার্ডটিই PNG হিসেবে সেভ করে; পুরো ওয়েবপেজ সেভ হয় না। Chrome automatic download বন্ধ থাকলে PNG প্রস্তুত হওয়ার পর “PNG সংরক্ষণ করুন” বাটন থেকে হাতে সেভ করা যাবে।

@@ -175,8 +175,36 @@ async function makePngFromElement(source){
   }finally{URL.revokeObjectURL(svgUrl);holder.remove()}
 }
 async function downloadBlob(blob,filename){
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  if(!blob) throw new Error('PNG blob পাওয়া যায়নি');
+  const url=URL.createObjectURL(blob);
+  const save=()=>{
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=filename;
+    a.rel='noopener';
+    a.style.display='none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+  try{ save(); }catch(e){ console.warn('direct download blocked',e); }
+  // Also provide a guaranteed user-click save link/preview for Chrome when automatic downloads are blocked.
+  showPngSaveDialog(url,filename);
+  setTimeout(()=>URL.revokeObjectURL(url),120000);
 }
+function showPngSaveDialog(url,filename){
+  let box=document.getElementById('pngSaveDialog');
+  if(box)box.remove();
+  box=document.createElement('div');
+  box.id='pngSaveDialog';
+  box.innerHTML=`<div class="png-save-backdrop"></div><div class="png-save-card"><button type="button" class="png-save-close" aria-label="close">×</button><h3>🖼️ Receipt PNG প্রস্তুত</h3><p>নিচের <b>PNG সংরক্ষণ করুন</b> বাটনে চাপুন।</p><img src="${url}" alt="Receipt PNG"><div class="png-save-actions"><a class="primary-btn png-save-link" href="${url}" download="${filename}">⬇️ PNG সংরক্ষণ করুন</a><button type="button" class="outline-btn png-save-close2">বন্ধ</button></div></div>`;
+  document.body.appendChild(box);
+  const close=()=>box.remove();
+  box.querySelector('.png-save-close').onclick=close;
+  box.querySelector('.png-save-close2').onclick=close;
+  box.querySelector('.png-save-backdrop').onclick=close;
+}
+
 async function pngCurrentPage(){
   const page=document.querySelector('.page.active');if(!page)return;
   try{toast('PNG তৈরি হচ্ছে...');if(document.fonts&&document.fonts.ready)await document.fonts.ready;const blob=await makePngFromElement(page);await downloadBlob(blob,`${safeFileName(pageLabel(page.id.replace('page-','')))}-${today()}.png`);toast('PNG সফলভাবে ডাউনলোড হয়েছে')}catch(err){console.error('PNG error:',err);toast('PNG তৈরি করা যায়নি। আবার চেষ্টা করুন।')}

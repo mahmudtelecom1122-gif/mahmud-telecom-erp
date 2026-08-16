@@ -88,3 +88,14 @@
   border-radius:10px;
   padding:16px 16px 12px;
 }
+
+/* Receipt PNG save fallback dialog */
+#pngSaveDialog{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+#pngSaveDialog .png-save-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+#pngSaveDialog .png-save-card{position:relative;z-index:1;width:min(390px,92vw);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
+#pngSaveDialog .png-save-card h3{margin:0 0 6px;font-size:18px}
+#pngSaveDialog .png-save-card p{margin:0 0 12px;color:#667085;font-size:13px}
+#pngSaveDialog .png-save-card img{display:block;width:100%;max-height:62vh;object-fit:contain;background:#fff;border:1px solid #e5e7eb;border-radius:10px;margin:0 auto 14px}
+#pngSaveDialog .png-save-close{position:absolute;right:10px;top:8px;border:0;background:#f2f4f7;border-radius:50%;width:30px;height:30px;font-size:22px;line-height:30px;cursor:pointer}
+#pngSaveDialog .png-save-actions{display:flex;gap:8px;justify-content:center;align-items:center}
+#pngSaveDialog .png-save-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}
