@@ -27,7 +27,27 @@ function toast(t){const el=document.getElementById('toast');el.textContent=t;el.
 function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));const titles={dashboard:'ড্যাশবোর্ড',sales:'বিক্রয় ব্যবস্থাপনা',purchases:'ক্রয় ব্যবস্থাপনা',products:'স্টক / পণ্য',customers:'কাস্টমার',suppliers:'সাপ্লায়ার',dues:'বাকি ও কালেকশন',recharge:'মোবাইল রিচার্জ',banking:'মোবাইল ব্যাংকিং',reports:'রিপোর্ট ও হিসাব',settings:'সেটিংস'};document.getElementById('pageTitle').textContent=titles[page]||'ড্যাশবোর্ড';document.getElementById('sidebar').classList.remove('open');history.replaceState(null,'','#'+page);window.scrollTo({top:0,behavior:'smooth'});if(page==='reports')renderReport()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)showPage(b.dataset.page)});
 document.getElementById('menuBtn').onclick=()=>document.getElementById('sidebar').classList.toggle('open');
-function openModal(title,html,onSubmit){const m=document.getElementById('modal');document.getElementById('modalContent').innerHTML=`<h2>${title}</h2><form id="dynamicForm">${html}<div class="modal-actions"><button type="button" class="outline-btn" data-close>বাতিল</button><button class="primary-btn">সংরক্ষণ করুন</button></div></form>`;m.classList.add('show');document.getElementById('dynamicForm').onsubmit=e=>{e.preventDefault();onSubmit(new FormData(e.target));m.classList.remove('show')};m.querySelector('[data-close]').onclick=()=>m.classList.remove('show')}
+function openModal(title,html,onSubmit){
+  const m=document.getElementById('modal');
+  const hasSubmit=typeof onSubmit==='function';
+  document.getElementById('modalContent').innerHTML=`<h2>${title}</h2><form id="dynamicForm">${html}${hasSubmit?`<div class="modal-actions"><button type="button" class="outline-btn" data-close>বাতিল</button><button type="submit" class="primary-btn">সংরক্ষণ করুন</button></div>`:`<div class="modal-actions"><button type="button" class="outline-btn" data-close>বাতিল</button><button type="button" class="primary-btn" data-receipt-save>সংরক্ষণ করুন</button></div>`}</form>`;
+  m.classList.add('show');
+  const form=document.getElementById('dynamicForm');
+  form.onsubmit=e=>{
+    e.preventDefault();
+    if(hasSubmit){onSubmit(new FormData(e.target));m.classList.remove('show');}
+  };
+  const close=m.querySelector('[data-close]');
+  if(close)close.onclick=()=>m.classList.remove('show');
+  const receiptSave=m.querySelector('[data-receipt-save]');
+  if(receiptSave){
+    receiptSave.onclick=()=>{
+      const png=m.querySelector('#pngServiceReceipt')||m.querySelector('#pngReceipt');
+      if(png){png.click();}
+      else{m.classList.remove('show');}
+    };
+  }
+}
 document.querySelectorAll('[data-close]').forEach(x=>x.onclick=()=>document.getElementById('modal').classList.remove('show'));
 function field(label,name,value='',type='text',extra=''){return `<label>${label}<input name="${name}" type="${type}" value="${value}" ${extra}></label>`}
 function selectField(label,name,opts){return `<label>${label}<select name="${name}">${opts.map(o=>`<option>${o}</option>`).join('')}</select></label>`}
@@ -55,9 +75,9 @@ document.getElementById('newRechargeBtn').onclick=()=>openModal('মোবাই
 document.getElementById('newBankBtn').onclick=()=>openModal('মোবাইল ব্যাংকিং লেনদেন',`<div class="form-grid">${selectField('মাধ্যম','method',['বিকাশ','নগদ','রকেট','উপায়'])}${selectField('ধরন','type',['Cash In','Cash Out','Send Money','Payment'])}${field('নম্বর','phone','','tel')}${field('টাকার পরিমাণ','amount','0','number','required min="0"')}${field('চার্জ','charge','0','number','min="0"')}</div>`,f=>{db.banking.push({id:uid('B'),date:today(),method:f.get('method'),type:f.get('type'),phone:f.get('phone'),amount:+f.get('amount'),charge:+f.get('charge')});save();toast('ব্যাংকিং লেনদেন সংরক্ষণ হয়েছে')});
 
 document.addEventListener('click',e=>{const c=e.target.closest('[data-collect]');if(c)collect(c.dataset.collect);const p=e.target.closest('[data-delete-purchase]');if(p&&confirm('এই ক্রয়টি মুছে ফেলবেন?')){db.purchases=db.purchases.filter(x=>x.id!==p.dataset.deletePurchase);save();toast('মুছে ফেলা হয়েছে')}const r=e.target.closest('[data-delete-recharge]');if(r&&confirm('এই রিচার্জটি মুছে ফেলবেন?')){db.recharge=db.recharge.filter(x=>x.id!==r.dataset.deleteRecharge);save();toast('মুছে ফেলা হয়েছে')}const b=e.target.closest('[data-delete-bank]');if(b&&confirm('এই লেনদেনটি মুছে ফেলবেন?')){db.banking=db.banking.filter(x=>x.id!==b.dataset.deleteBank);save();toast('মুছে ফেলা হয়েছে')}const rr=e.target.closest('[data-recharge-receipt]');if(rr){const x=db.recharge.find(v=>v.id===rr.dataset.rechargeReceipt);if(x)serviceReceipt('মোবাইল রিচার্জ',x,'recharge')}const br=e.target.closest('[data-bank-receipt]');if(br){const x=db.banking.find(v=>v.id===br.dataset.bankReceipt);if(x)serviceReceipt('মোবাইল ব্যাংকিং',x,'banking')}const pr=e.target.closest('[data-edit-product]');if(pr){const x=db.products.find(p=>p.id===pr.dataset.editProduct);openModal('পণ্য সম্পাদনা',`<div class="form-grid">${field('পণ্যের নাম','name',x.name,'text','required')}${field('ক্যাটাগরি','cat',x.cat,'text','required')}${field('ক্রয় মূল্য','buy',x.buy,'number','required')}${field('বিক্রয় মূল্য','sell',x.sell,'number','required')}${field('স্টক','stock',x.stock,'number','required')}${field('কম স্টক সীমা','min',x.min,'number','required')}${field('আইকন','icon',x.icon||'📦')}</div>`,f=>{Object.assign(x,{name:f.get('name'),cat:f.get('cat'),buy:+f.get('buy'),sell:+f.get('sell'),stock:+f.get('stock'),min:+f.get('min'),icon:f.get('icon')});save();toast('পণ্য আপডেট হয়েছে')})}const rec=e.target.closest('[data-receipt]');if(rec){const x=db.sales.find(s=>s.id===rec.dataset.receipt);receipt(x)}});
-function receipt(x){openModal('বিক্রয় রসিদ',`<div class="receipt" id="receiptBox"><img src="assets/logo.png"><h2>${db.shop.name}</h2><p>${db.shop.phone}</p><p>${x.date} • ${x.id}</p><table><tr><td>কাস্টমার</td><td style="text-align:right">${x.customer}</td></tr><tr><td>মোট</td><td style="text-align:right">${money(x.total)}</td></tr><tr><td>পরিশোধ</td><td style="text-align:right">${money(x.paid)}</td></tr><tr><td>বাকি</td><td style="text-align:right">${money(x.total-x.paid)}</td></tr></table><div class="total">ধন্যবাদ। আবার আসবেন।</div></div><div class="modal-actions"><button type="button" class="outline-btn" id="printReceipt">🖨️ প্রিন্ট</button><button type="button" class="primary-btn" id="pngReceipt">🖼️ PNG</button></div>`);setTimeout(()=>{document.getElementById('printReceipt').onclick=()=>{document.body.classList.add('receipt-printing');window.setTimeout(()=>window.print(),80)};document.getElementById('pngReceipt').onclick=async()=>{try{toast('PNG তৈরি হচ্ছে...');const blob=await makePngFromElement(document.getElementById('receiptBox'));await downloadBlob(blob,`receipt-${safeFileName(x.id)}.png`);toast('PNG সফলভাবে ডাউনলোড হয়েছে')}catch(err){console.error(err);toast('PNG তৈরি করা যায়নি। আবার চেষ্টা করুন।')}}} ,50)}
+function receipt(x){openModal('বিক্রয় রসিদ',`<div class="receipt" id="receiptBox"><img src="assets/logo.png"><h2>${db.shop.name}</h2><p>${db.shop.phone}</p><p>${x.date} • ${x.id}</p><table><tr><td>কাস্টমার</td><td style="text-align:right">${x.customer}</td></tr><tr><td>মোট</td><td style="text-align:right">${money(x.total)}</td></tr><tr><td>পরিশোধ</td><td style="text-align:right">${money(x.paid)}</td></tr><tr><td>বাকি</td><td style="text-align:right">${money(x.total-x.paid)}</td></tr></table><div class="total">ধন্যবাদ। আবার আসবেন।</div></div><div class="modal-actions"><button type="button" class="outline-btn" id="printReceipt">🖨️ প্রিন্ট</button><button type="button" class="primary-btn" id="pngReceipt">🖼️ PNG</button></div>`);setTimeout(()=>{document.getElementById('printReceipt').onclick=()=>{document.body.classList.add('receipt-printing');window.setTimeout(()=>window.print(),80)};document.getElementById('pngReceipt').onclick=async()=>{try{toast('PNG তৈরি হচ্ছে...');const blob=await makeStandardReceiptPngData(x);await downloadBlob(blob,`receipt-${safeFileName(x.id)}.png`);toast('PNG সফলভাবে ডাউনলোড হয়েছে')}catch(err){console.error(err);toast('PNG তৈরি করা যায়নি। আবার চেষ্টা করুন।')}}} ,50)}
 
-function serviceReceipt(title,x,type){const id=x.id||uid(type==='banking'?'MB':'MR');const isBank=type==='banking';const rows=isBank?`<div class="receipt-line"><span>গ্রাহকের মোবাইল:</span><b>${x.phone||'-'}</b></div><div class="receipt-line"><span>লেনদেনের ধরন:</span><b>${x.type||'-'}</b></div><div class="receipt-line"><span>মাধ্যম:</span><b>${x.method||'-'}</b></div><div class="receipt-line"><span>চার্জ:</span><b>${money(x.charge||0)}</b></div><div class="receipt-line"><span>মোট পরিমাণ:</span><b>${money(x.amount||0)}</b></div>`:`<div class="receipt-line"><span>গ্রাহকের মোবাইল:</span><b>${x.phone||'-'}</b></div><div class="receipt-line"><span>অপারেটর:</span><b>${x.operator||'-'}</b></div><div class="receipt-line"><span>রিচার্জের ধরন:</span><b>${x.type||'-'}</b></div><div class="receipt-line"><span>মাধ্যম:</span><b>${x.method||'-'}</b></div><div class="receipt-line"><span>পরিমাণ:</span><b>${money(x.amount||0)}</b></div>`;openModal(title,`<div class="service-receipt-wrap"><div class="service-receipt-toolbar"><strong>${title}</strong><div class="receipt-toolbar-actions"><button type="button" class="outline-btn" id="printServiceReceipt">🖨️ প্রিন্ট</button><button type="button" class="primary-btn" id="pngServiceReceipt">🖼️ PNG</button></div></div><div class="service-receipt" id="serviceReceiptBox"><div class="service-brand"><img src="assets/logo.png"><div><h2>${db.shop.name}</h2><p>${db.shop.address||'Barura, Cumilla'}</p><p>${db.shop.phone}</p></div></div><div class="service-meta"><div><span>লেনদেন আইডি:</span><b>${id}</b></div><div><span>তারিখ:</span><b>${x.date||today()}</b></div><div><span>সময়:</span><b>${new Date().toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'})}</b></div></div>${isBank&&x.method?`<div class="service-method">${x.method}</div>`:''}<div class="service-receipt-lines">${rows}</div><div class="service-total"><span>মোট পরিমাণ:</span><b>${money(x.amount||0)}</b></div><div class="service-status">স্ট্যাটাস: <b>সফল</b></div><div class="service-thanks">ধন্যবাদ!<small>Powered by Mahmud Telecom</small></div></div></div>`);setTimeout(()=>{const print=document.getElementById('printServiceReceipt'),png=document.getElementById('pngServiceReceipt');if(print)print.onclick=()=>{document.body.classList.add('receipt-printing');window.setTimeout(()=>window.print(),80)};if(png)png.onclick=async()=>{try{toast('PNG তৈরি হচ্ছে...');if(document.fonts&&document.fonts.ready)await document.fonts.ready;const receipt=document.getElementById('serviceReceiptBox');if(!receipt)throw new Error('Receipt not found');const blob=await makeReceiptPng(receipt);await downloadBlob(blob,`${type}-receipt-${safeFileName(id)}.png`);toast('PNG সফলভাবে ডাউনলোড হয়েছে')}catch(err){console.error(err);toast('PNG তৈরি করা যায়নি। আবার চেষ্টা করুন।')}}},50)}
+function serviceReceipt(title,x,type){const id=x.id||uid(type==='banking'?'MB':'MR');const isBank=type==='banking';const rows=isBank?`<div class="receipt-line"><span>গ্রাহকের মোবাইল:</span><b>${x.phone||'-'}</b></div><div class="receipt-line"><span>লেনদেনের ধরন:</span><b>${x.type||'-'}</b></div><div class="receipt-line"><span>মাধ্যম:</span><b>${x.method||'-'}</b></div><div class="receipt-line"><span>চার্জ:</span><b>${money(x.charge||0)}</b></div><div class="receipt-line"><span>মোট পরিমাণ:</span><b>${money(x.amount||0)}</b></div>`:`<div class="receipt-line"><span>গ্রাহকের মোবাইল:</span><b>${x.phone||'-'}</b></div><div class="receipt-line"><span>অপারেটর:</span><b>${x.operator||'-'}</b></div><div class="receipt-line"><span>রিচার্জের ধরন:</span><b>${x.type||'-'}</b></div><div class="receipt-line"><span>মাধ্যম:</span><b>${x.method||'-'}</b></div><div class="receipt-line"><span>পরিমাণ:</span><b>${money(x.amount||0)}</b></div>`;openModal(title,`<div class="service-receipt-wrap"><div class="service-receipt-toolbar"><strong>${title}</strong><div class="receipt-toolbar-actions"><button type="button" class="outline-btn" id="printServiceReceipt">🖨️ প্রিন্ট</button><button type="button" class="primary-btn" id="pngServiceReceipt">🖼️ PNG</button></div></div><div class="service-receipt" id="serviceReceiptBox"><div class="service-brand"><img src="assets/logo.png"><div><h2>${db.shop.name}</h2><p>${db.shop.address||'Barura, Cumilla'}</p><p>${db.shop.phone}</p></div></div><div class="service-meta"><div><span>লেনদেন আইডি:</span><b>${id}</b></div><div><span>তারিখ:</span><b>${x.date||today()}</b></div><div><span>সময়:</span><b>${new Date().toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'})}</b></div></div>${isBank&&x.method?`<div class="service-method">${x.method}</div>`:''}<div class="service-receipt-lines">${rows}</div><div class="service-total"><span>মোট পরিমাণ:</span><b>${money(x.amount||0)}</b></div><div class="service-status">স্ট্যাটাস: <b>সফল</b></div><div class="service-thanks">ধন্যবাদ!<small>Powered by Mahmud Telecom</small></div></div></div>`);setTimeout(()=>{const print=document.getElementById('printServiceReceipt'),png=document.getElementById('pngServiceReceipt');if(print)print.onclick=()=>{document.body.classList.add('receipt-printing');window.setTimeout(()=>window.print(),80)};if(png)png.onclick=async()=>{try{toast('PNG তৈরি হচ্ছে...');if(document.fonts&&document.fonts.ready)await document.fonts.ready;const receipt=document.getElementById('serviceReceiptBox');if(!receipt)throw new Error('Receipt not found');const blob=await makeServiceReceiptPngData(title,x,type);await downloadBlob(blob,`${type}-receipt-${safeFileName(id)}.png`);toast('PNG সফলভাবে ডাউনলোড হয়েছে')}catch(err){console.error(err);toast('PNG তৈরি করা যায়নি। আবার চেষ্টা করুন।')}}},50)}
 
 document.getElementById('saleSearch').oninput=renderSales;document.getElementById('saleFilter').onchange=renderSales;document.getElementById('purchaseSearch').oninput=renderPurchases;document.getElementById('purchaseFilter').onchange=renderPurchases;document.getElementById('productSearch').oninput=renderProducts;document.getElementById('productCat').onchange=renderProducts;document.getElementById('customerSearch').oninput=renderCustomers;document.getElementById('applyReport').onclick=renderReport;
 const savedTheme=localStorage.getItem('mah_theme')==='dark';function theme(d){document.body.classList.toggle('dark',d);document.getElementById('darkToggle').checked=d;document.getElementById('themeBtn').textContent=d?'☾':'☼';localStorage.setItem('mah_theme',d?'dark':'light')}theme(savedTheme);document.getElementById('themeBtn').onclick=()=>theme(!document.body.classList.contains('dark'));document.getElementById('darkToggle').onchange=e=>theme(e.target.checked);
@@ -78,6 +98,118 @@ async function imageToDataURL(img){
     return await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob)});
   }catch(e){return null}
 }
+
+function svgEsc(v){
+  return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+async function svgToPng(svg,width,height){
+  const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  try{
+    const img=new Image();
+    await new Promise((resolve,reject)=>{
+      img.onload=resolve;
+      img.onerror=()=>reject(new Error('SVG render failed'));
+      img.src=url;
+    });
+    const scale=2;
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.ceil(width*scale);
+    canvas.height=Math.ceil(height*scale);
+    const ctx=canvas.getContext('2d');
+    if(!ctx)throw new Error('Canvas unavailable');
+    ctx.fillStyle='#fff';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    return await new Promise((resolve,reject)=>{
+      canvas.toBlob(b=>b?resolve(b):reject(new Error('PNG blob failed')),'image/png',1);
+    });
+  }finally{
+    URL.revokeObjectURL(url);
+  }
+}
+async function makeServiceReceiptPngData(title,x,type){
+  const box=document.getElementById('serviceReceiptBox');
+  const logoEl=box?box.querySelector('img'):null;
+  const logo=logoEl?await imageToDataURL(logoEl):null;
+  const W=760, pad=42, inner=W-pad*2;
+  const isBank=type==='banking';
+  const rows=isBank?[
+    ['গ্রাহকের মোবাইল:',x.phone||'-'],
+    ['লেনদেনের ধরন:',x.type||'-'],
+    ['মাধ্যম:',x.method||'-'],
+    ['চার্জ:',money(x.charge||0)],
+    ['মোট পরিমাণ:',money(x.amount||0)]
+  ]:[
+    ['গ্রাহকের মোবাইল:',x.phone||'-'],
+    ['অপারেটর:',x.operator||'-'],
+    ['রিচার্জের ধরন:',x.type||'-'],
+    ['মাধ্যম:',x.method||'-'],
+    ['পরিমাণ:',money(x.amount||0)]
+  ];
+  const H=760;
+  const logoSvg=logo?`<image href="${logo}" x="${pad+2}" y="48" width="78" height="78" preserveAspectRatio="xMidYMid slice"/>`:
+    `<rect x="${pad+2}" y="48" width="78" height="78" rx="14" fill="#ff315f"/><text x="${pad+41}" y="98" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">MT</text>`;
+  let y=190;
+  const rowSvg=rows.map(([a,b])=>{
+    const out=`<text x="${pad}" y="${y}" font-size="20" fill="#626a84">${svgEsc(a)}</text>
+      <text x="${W-pad}" y="${y}" text-anchor="end" font-size="20" font-weight="700" fill="#20284b">${svgEsc(b)}</text>
+      <line x1="${pad}" y1="${y+18}" x2="${W-pad}" y2="${y+18}" stroke="#e1e4ec" stroke-dasharray="5 5"/>`;
+    y+=58; return out;
+  }).join('');
+  const totalY=y+22;
+  const statusY=totalY+58;
+  const thanksY=statusY+58;
+  const h=Math.max(H,thanksY+70);
+  const methodTitle=String(x.type||title||'লেনদেন');
+  const metaTime=new Date().toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'});
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}">
+    <rect width="100%" height="100%" fill="#fff"/>
+    <rect x="20" y="20" width="${W-40}" height="${h-40}" rx="24" fill="#fff" stroke="#e5e8f4" stroke-width="2"/>
+    ${logoSvg}
+    <text x="${pad+96}" y="75" font-family="Hind Siliguri, Arial, sans-serif" font-size="26" font-weight="800" fill="#178f3f">${svgEsc(db.shop.name)}</text>
+    <text x="${pad+96}" y="101" font-family="Hind Siliguri, Arial, sans-serif" font-size="15" fill="#4e556e">${svgEsc(db.shop.address||'Barura, Cumilla')}</text>
+    <text x="${pad+96}" y="124" font-family="Hind Siliguri, Arial, sans-serif" font-size="15" fill="#4e556e">${svgEsc(db.shop.phone||'')}</text>
+    <line x1="${pad}" y1="150" x2="${W-pad}" y2="150" stroke="#edf0f6"/>
+    <text x="${pad}" y="178" font-family="Hind Siliguri, Arial, sans-serif" font-size="15" fill="#7b829d">লেনদেন আইডি:</text>
+    <text x="${pad+150}" y="178" font-family="Hind Siliguri, Arial, sans-serif" font-size="15" font-weight="700" fill="#283153">${svgEsc(x.id||'-')}</text>
+    <text x="${W-pad-190}" y="178" font-family="Hind Siliguri, Arial, sans-serif" font-size="15" fill="#7b829d">তারিখ:</text>
+    <text x="${W-pad}" y="178" text-anchor="end" font-family="Hind Siliguri, Arial, sans-serif" font-size="15" font-weight="700" fill="#283153">${svgEsc(x.date||today())}</text>
+    <text x="${pad}" y="204" font-family="Hind Siliguri, Arial, sans-serif" font-size="15" fill="#7b829d">সময়:</text>
+    <text x="${pad+150}" y="204" font-family="Hind Siliguri, Arial, sans-serif" font-size="15" font-weight="700" fill="#283153">${svgEsc(metaTime)}</text>
+    <line x1="${pad}" y1="222" x2="${W-pad}" y2="222" stroke="#edf0f6"/>
+    <text x="${W/2}" y="260" text-anchor="middle" font-family="Hind Siliguri, Arial, sans-serif" font-size="28" font-weight="800" fill="#d62c83">${svgEsc(methodTitle)}</text>
+    ${rowSvg}
+    <line x1="${pad}" y1="${totalY-15}" x2="${W-pad}" y2="${totalY-15}" stroke="#dfe3ee"/>
+    <text x="${pad}" y="${totalY+12}" font-family="Hind Siliguri, Arial, sans-serif" font-size="21" fill="#283153">মোট পরিমাণ:</text>
+    <text x="${W-pad}" y="${totalY+12}" text-anchor="end" font-family="Hind Siliguri, Arial, sans-serif" font-size="28" font-weight="800" fill="#20284b">${svgEsc(money(x.amount||0))}</text>
+    <text x="${W-pad}" y="${statusY}" text-anchor="end" font-family="Hind Siliguri, Arial, sans-serif" font-size="16" fill="#6e768f">স্ট্যাটাস: <tspan fill="#18a96b" font-weight="800">সফল</tspan></text>
+    <text x="${W/2}" y="${thanksY}" text-anchor="middle" font-family="Hind Siliguri, Arial, sans-serif" font-size="20" font-weight="800" fill="#20284b">ধন্যবাদ!</text>
+    <text x="${W/2}" y="${thanksY+25}" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#8b91a5">Powered by Mahmud Telecom</text>
+  </svg>`;
+  return svgToPng(svg,W,h);
+}
+async function makeStandardReceiptPngData(x){
+  const box=document.getElementById('receiptBox');
+  const logoEl=box?box.querySelector('img'):null;
+  const logo=logoEl?await imageToDataURL(logoEl):null;
+  const W=760,H=690,pad=52;
+  const logoSvg=logo?`<image href="${logo}" x="${W/2-55}" y="38" width="110" height="110" preserveAspectRatio="xMidYMid slice"/>`:
+    `<rect x="${W/2-55}" y="38" width="110" height="110" rx="18" fill="#ff315f"/>`;
+  const vals=[
+    ['কাস্টমার',x.customer||'-'],
+    ['মোট',money(x.total||0)],
+    ['পরিশোধ',money(x.paid||0)],
+    ['বাকি',money((x.total||0)-(x.paid||0))]
+  ];
+  let y=245;
+  const lines=vals.map(([a,b])=>{
+    const s=`<text x="${pad}" y="${y}" font-family="Hind Siliguri, Arial, sans-serif" font-size="20" fill="#555">${svgEsc(a)}</text><text x="${W-pad}" y="${y}" text-anchor="end" font-family="Hind Siliguri, Arial, sans-serif" font-size="20" font-weight="700" fill="#111">${svgEsc(b)}</text><line x1="${pad}" y1="${y+15}" x2="${W-pad}" y2="${y+15}" stroke="#bbb" stroke-dasharray="5 5"/>`; y+=58; return s;
+  }).join('');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="100%" height="100%" fill="#fff"/>${logoSvg}<text x="${W/2}" y="180" text-anchor="middle" font-family="Hind Siliguri, Arial, sans-serif" font-size="28" font-weight="800">${svgEsc(db.shop.name)}</text><text x="${W/2}" y="207" text-anchor="middle" font-family="Arial,sans-serif" font-size="16">${svgEsc(db.shop.phone||'')}</text><text x="${W/2}" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-size="14">${svgEsc(x.date||today())} • ${svgEsc(x.id||'-')}</text>${lines}<text x="${W-pad}" y="${y+35}" text-anchor="end" font-family="Hind Siliguri, Arial, sans-serif" font-size="24" font-weight="800">ধন্যবাদ। আবার আসবেন।</text></svg>`;
+  return svgToPng(svg,W,H);
+}
+
 async function makeReceiptPng(source){
   if(!source) throw new Error('Receipt element not found');
   if(document.fonts&&document.fonts.ready) await document.fonts.ready;
