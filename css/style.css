@@ -30,3 +30,32 @@
   body.receipt-printing .modal-box{position:static!important;transform:none!important;width:auto!important;max-width:none!important;max-height:none!important;overflow:visible!important;padding:0!important;box-shadow:none!important;border:0!important;background:#fff!important}
   body.receipt-printing .receipt{display:block!important;width:80mm;max-width:80mm;margin:0 auto!important;box-shadow:none!important}
 }
+/* Mobile Recharge / Mobile Banking receipt layout */
+.service-receipt-wrap{width:100%}
+.service-receipt-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding:0 2px}
+.service-receipt-toolbar>strong{font-size:18px;color:var(--text)}
+.receipt-toolbar-actions{display:flex;gap:8px}
+.receipt-toolbar-actions .outline-btn,.receipt-toolbar-actions .primary-btn{min-width:72px;display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.service-receipt{width:100%;max-width:390px;margin:0 auto;background:#fff;border:1px solid #e8ebf3;border-radius:15px;box-shadow:0 8px 25px rgba(38,49,105,.08);padding:18px 18px 14px;color:#20284b;font-family:'Hind Siliguri',Arial,sans-serif}
+.service-brand{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #edf0f6}
+.service-brand img{width:48px;height:48px;border-radius:10px;object-fit:cover}
+.service-brand h2{font-size:17px;margin:0 0 1px;color:#178f3f}
+.service-brand p{font-size:10px;margin:0;color:#4e556e}
+.service-meta{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;padding:12px 0;border-bottom:1px solid #edf0f6}
+.service-meta div{display:flex;justify-content:space-between;gap:8px;font-size:9px}
+.service-meta span{color:#7b829d}.service-meta b{font-weight:700;color:#283153;text-align:right}
+.service-method{text-align:center;font-size:17px;font-weight:800;padding:14px 0 5px;color:#d62c83}
+.service-receipt-lines{padding:8px 0 4px}
+.receipt-line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed #e1e4ec;font-size:10px}
+.receipt-line span{color:#626a84}.receipt-line b{color:#20284b;text-align:right}
+.service-total{display:flex;justify-content:space-between;align-items:center;margin-top:9px;padding:10px 0;border-top:1px solid #dfe3ee;font-size:11px}
+.service-total b{font-size:16px}
+.service-status{text-align:right;font-size:10px;padding-top:3px;color:#6e768f}.service-status b{color:#18a96b}
+.service-thanks{text-align:center;font-size:11px;font-weight:700;padding-top:17px;color:#20284b}
+.service-thanks small{display:block;color:#8b91a5;font-size:8px;font-weight:500;margin-top:3px}
+@media(max-width:760px){.service-receipt-toolbar{align-items:center}.service-receipt-toolbar>strong{font-size:16px}.service-receipt{max-width:100%;padding:15px 14px}.service-meta{grid-template-columns:1fr}.service-meta div{font-size:9px}.receipt-toolbar-actions .outline-btn,.receipt-toolbar-actions .primary-btn{min-width:62px;padding:8px 9px}}
+@media print{
+  body.receipt-printing .service-receipt-wrap{display:block!important}
+  body.receipt-printing .service-receipt-toolbar{display:none!important}
+  body.receipt-printing .service-receipt{width:80mm;max-width:80mm;margin:0 auto!important;border:0;box-shadow:none;border-radius:0;padding:4mm;background:#fff}
+}
